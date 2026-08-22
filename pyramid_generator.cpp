@@ -111,8 +111,8 @@ std::string specialize(const Query& q) {
             }
         }, q.predicates[i]);
     }
-    out << ") {\n        emit(record);\n        if (++count == "
-        << q.limit << ") break;\n    }\n}\n";
+    out << ") {\n        if (count == " << q.limit << ") break;\n"
+        << "        emit(record);\n        ++count;\n    }\n}\n";
     return out.str();
 }
 
