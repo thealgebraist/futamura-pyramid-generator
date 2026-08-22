@@ -40,14 +40,20 @@ std::vector<std::string> split(std::string_view s, std::string_view sep) {
 }
 
 std::expected<Query, std::string> compile_dsl(std::string source) {
+    Query query;
+    static const std::regex top(R"(^SELECT\s+TOP\s+([0-9]+)\s+)", std::regex::icase);
+    std::smatch top_match;
+    if (std::regex_search(source, top_match, top)) {
+        query.limit = std::stoull(top_match[1].str());
+        source.replace(0, top_match[0].length(), "SELECT ");
+    }
+    if (source.starts_with("SELECT FROM")) source.replace(6, 1, " * ");
     static const std::regex select(
-        R"(^SELECT\s+(?:TOP\s+(\d+)\s+)?(.+?)\s+FROM\s+PYRAMIDS(?:\s+WHERE\s+(.+))?$)",
+        R"(^SELECT\s+(.+?)\s+FROM\s+PYRAMIDS(\s+WHERE\s+(.+))?$)",
         std::regex::icase);
     std::smatch m;
     if (!std::regex_match(source, m, select)) return std::unexpected("invalid SELECT");
 
-    Query query;
-    if (m[1].matched) query.limit = std::stoull(m[1].str());
     const std::string where = m[3].matched ? m[3].str() : "";
     static const std::regex predicate(
         R"(^([A-Za-z_]+)\s*(CONTAINS|>=|<=|!=|=|>|<)\s*(.+)$)",
