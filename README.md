@@ -154,3 +154,15 @@ ocamlc -o resource_sanity \
   core_specializer.ml resource_sanity.ml resource_sanity_driver.ml
 ./resource_sanity
 ```
+
+## Full sanity suite
+
+Run all pure OCaml tests, resource checks, C++ projection checks, generated
+program cases, and invalid-input checks with:
+
+```sh
+./sanity_test.sh
+```
+
+The suite builds every stage in a temporary directory, so it does not depend
+on stale generated artifacts in the repository.
