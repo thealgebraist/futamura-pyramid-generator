@@ -8,14 +8,7 @@
 #include <string_view>
 #include <variant>
 #include <vector>
-
-enum class Kind { text, number };
-struct Field { std::string_view sql, cpp; Kind kind; };
-constexpr Field schema[] = {
-    {"NAME", "name", Kind::text}, {"COUNTRY", "country", Kind::text},
-    {"BUILT_YEAR", "built_year", Kind::number},
-    {"HEIGHT_M", "height_m", Kind::number},
-};
+#include "pyramid_language.hpp"
 
 const Field* field(std::string name) {
     std::ranges::transform(name, name.begin(), [](unsigned char c) {
