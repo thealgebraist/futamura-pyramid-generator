@@ -45,7 +45,11 @@ std::expected<Query, std::string> compile_dsl(std::string source) {
     std::smatch top_match;
     if (std::regex_search(source, top_match, top)) {
         query.limit = std::stoull(top_match[1].str());
-        source.replace(0, top_match[0].length(), "SELECT ");
+        source.replace(0, static_cast<std::size_t>(top_match[0].length()), "SELECT ");
+    } else {
+        static const std::regex malformed_top(R"(^SELECT\s+TOP\b)", std::regex::icase);
+        if (std::regex_search(source, malformed_top))
+            return std::unexpected("TOP requires a non-negative integer");
     }
     if (source.starts_with("SELECT FROM")) source.replace(6, 1, " * ");
     static const std::regex select(
