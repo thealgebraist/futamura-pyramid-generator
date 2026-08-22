@@ -119,3 +119,17 @@ The expected output is:
 The core uses only algebraic data types, recursion, immutable lists, pattern
 matching, and pure functions. The residual program is represented by another
 ADT and rendered only at the boundary.
+
+## Non-executing resource sanity pass
+
+`resource_sanity.ml` performs a separate structural pass over an expression.
+It never calls `eval` or `specialize`. It estimates operation count, AST
+memory, maximum depth, dynamic leaves, and the logarithmic growth shape. It
+flags operation/memory budget violations and exponential-like branching before
+the expensive pass is run:
+
+```sh
+ocamlc -o resource_sanity \
+  core_specializer.ml resource_sanity.ml resource_sanity_driver.ml
+./resource_sanity
+```
