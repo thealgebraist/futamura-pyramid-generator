@@ -120,6 +120,27 @@ The core uses only algebraic data types, recursion, immutable lists, pattern
 matching, and pure functions. The residual program is represented by another
 ADT and rendered only at the boundary.
 
+## Second projection in pure OCaml
+
+`core_second_projection.ml` makes the second projection explicit. It defines a
+language specification ADT and a generic interpreter parameterized by that
+specification. Specializing the interpreter with `core_language` produces the
+fixed `core_compiler` function:
+
+```text
+interpreter + fixed language specification -> compiler
+```
+
+Test it with:
+
+```sh
+ocamlc -o core_second_projection_tests \
+  core_specializer.ml \
+  core_second_projection.ml \
+  core_second_projection_tests.ml
+./core_second_projection_tests
+```
+
 ## Non-executing resource sanity pass
 
 `resource_sanity.ml` performs a separate structural pass over an expression.
