@@ -63,30 +63,29 @@ the residual database program.
 
 ## Third projection
 
-`third_projection.cpp` performs a bootstrap/self-application check on the
-compiler generator. Because `spec_to_header.cpp` is already a minimal,
-fixed-schema compiler generator, its third projection is identity-shaped: no
-semantic work can be erased without changing the language. The residual
-compiler generator is nevertheless emitted and compiled as an independent
-artifact:
+`third_projection.cpp` performs real partial evaluation of the second-stage
+compiler with respect to a fixed language specification. The residual
+compiler no longer reads or parses a specification at runtime; it emits the
+fixed schema directly:
 
 ```sh
 clang++ -std=c++23 -Wall -Wextra -pedantic third_projection.cpp -o third_projection
-./third_projection spec_to_header.cpp residual_spec_to_header.cpp
+./third_projection pyramid_language.spec fixed_spec_to_header.cpp
 clang++ -std=c++23 -Wall -Wextra -pedantic \
-  residual_spec_to_header.cpp -o residual_spec_to_header
-./residual_spec_to_header pyramid_language.spec > residual_language.hpp
-cmp pyramid_language.hpp residual_language.hpp
+  fixed_spec_to_header.cpp -o fixed_spec_to_header
+./fixed_spec_to_header > fixed_language.hpp
+cmp pyramid_language.hpp fixed_language.hpp
 ```
 
 Conceptually:
 
 ```text
-compiler + fixed compiler-generator description -> compiler generator
+compiler + fixed compiler-generator description -> specialized compiler generator
 ```
 
-The identity-shaped result is evidence that the current generator is already
-at its useful residual boundary, rather than evidence of a new runtime layer.
+The generated `fixed_spec_to_header.cpp` has no language-spec parser and no
+runtime input. Its only remaining job is to emit the already-specialized
+schema header.
 
 Online Wikidata acquisition is intentionally a separate adapter. Keeping the
 generator dependency-free makes its specification, semantics, and staging
