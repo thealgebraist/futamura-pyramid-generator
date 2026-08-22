@@ -90,3 +90,32 @@ schema header.
 Online Wikidata acquisition is intentionally a separate adapter. Keeping the
 generator dependency-free makes its specification, semantics, and staging
 boundary easy to audit.
+
+## Pure OCaml core specializer
+
+`core_specializer.ml` is a self-contained pure OCaml core written in the same
+ADT-oriented language it specializes. It defines:
+
+```text
+expr -> value -> result
+expr -> code -> residual OCaml
+```
+
+The specializer partially evaluates the interpreter with respect to static
+subexpressions. The driver is the only file with I/O:
+
+```sh
+ocamlc -o core_specializer core_specializer.ml core_specializer_driver.ml
+./core_specializer
+```
+
+The expected output is:
+
+```text
+9
+(let x = (input + 1) in (if ((input + 1) = 4) then 10 else 20))
+```
+
+The core uses only algebraic data types, recursion, immutable lists, pattern
+matching, and pure functions. The residual program is represented by another
+ADT and rendered only at the boundary.
