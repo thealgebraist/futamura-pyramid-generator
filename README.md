@@ -166,3 +166,6 @@ program cases, and invalid-input checks with:
 
 The suite builds every stage in a temporary directory, so it does not depend
 on stale generated artifacts in the repository.
+
+It also runs 10,000 deterministic expression shapes through evaluation,
+specialization, residual rendering, and resource estimation.
