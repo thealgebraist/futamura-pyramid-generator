@@ -100,6 +100,14 @@ Definition parse_and_compile (tokens : list token) : option compiled_query :=
   | None => None
   end.
 
+Lemma parse_and_compile_some : forall tokens q,
+  parse tokens = Some q ->
+  parse_and_compile tokens = Some (compile_query q).
+Proof.
+  intros tokens q parsed.
+  unfold parse_and_compile; rewrite parsed; reflexivity.
+Qed.
+
 Theorem parse_and_compile_correct : forall tokens q rows,
   parse tokens = Some q ->
   run_compiled (match parse_and_compile tokens with
