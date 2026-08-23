@@ -87,6 +87,25 @@ The generated `fixed_spec_to_header.cpp` has no language-spec parser and no
 runtime input. Its only remaining job is to emit the already-specialized
 schema header.
 
+## Next projection: bootstrap self-application
+
+There is no canonical fourth Futamura projection, but the next useful step is
+a self-application bootstrap. `fourth_projection.cpp` specializes the
+third-stage generator with the fixed language specification and emits a
+no-input program that reconstructs the specialized compiler generator:
+
+```sh
+clang++ -std=c++23 -Wall -Wextra -pedantic fourth_projection.cpp -o fourth_projection
+./fourth_projection pyramid_language.spec bootstrap.cpp
+clang++ -std=c++23 -Wall -Wextra -pedantic bootstrap.cpp -o bootstrap
+./bootstrap > reconstructed_fixed.cpp
+clang++ -std=c++23 -Wall -Wextra -pedantic reconstructed_fixed.cpp -o reconstructed_fixed
+./reconstructed_fixed > reconstructed.hpp
+cmp pyramid_language.hpp reconstructed.hpp
+```
+
+This closes the practical bootstrap loop without adding a runtime meta-language.
+
 Online Wikidata acquisition is intentionally a separate adapter. Keeping the
 generator dependency-free makes its specification, semantics, and staging
 boundary easy to audit.
