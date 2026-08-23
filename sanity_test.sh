@@ -84,7 +84,7 @@ grep -q 'numeric CONTAINS' "$tmp/error"
 
 echo "[10/10] Coq recursive tower observer"
 if command -v coqc >/dev/null 2>&1; then
-    (cd "$root" && coqc -q TypedTowerObserver.v)
+    (cd "$root" && coqc -q TypedTowerObserver.v && coqc -q CertifiedCorePass.v)
 else
     echo "coqc not found" >&2
     exit 1

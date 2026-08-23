@@ -217,3 +217,8 @@ coqc -q TypedTowerObserver.v
 This is the CompCert-style boundary for the project: the observer is a
 verified front-end pass, while the extracted executable can remain an OCaml
 specializer that emits the restricted C++23 target.
+
+`CertifiedCorePass.v` supplies the next boundary: a source arithmetic AST, a
+target AST, an executable constant-folding pass, and the theorem
+`compiler_semantics_preserved`.  It is a small complete semantic-preservation
+example that can be extended with variables, records, and residual code.
