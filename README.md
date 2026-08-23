@@ -172,7 +172,9 @@ projection3: generator -> compiler-generator
 
 All semantic functions return `('a, string) result`; the stage contract is an
 explicit algebraic value and rejects mismatched stage order. The tests are
-included in the full sanity suite.
+included in the full sanity suite. `stage_n_checked` recursively applies a
+homogeneous total stage transformation for arbitrary non-negative `n`, while
+retaining the concrete typed APIs for stages 1–3.
 
 ## Non-executing resource sanity pass
 

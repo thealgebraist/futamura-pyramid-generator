@@ -31,5 +31,17 @@ let () =
   | Error _ -> ()
   | Ok _ -> failwith "invalid stage order accepted"
   end;
+  let increment x = Ok (x + 1) in
+  begin match stage_n_checked 0 increment 4 with
+  | Ok 4 -> ()
+  | _ -> failwith "stage n zero case failed"
+  end;
+  begin match stage_n_checked 3 increment 4 with
+  | Ok 7 -> ()
+  | _ -> failwith "stage n recursive case failed"
+  end;
+  begin match stage_n_checked (-1) increment 4 with
+  | Error _ -> ()
+  | Ok _ -> failwith "negative stage count accepted"
+  end;
   print_endline "PASS total Futamura stages 1-3"
-

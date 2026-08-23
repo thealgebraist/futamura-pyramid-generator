@@ -31,6 +31,23 @@ type 'a staged = {
   artifact: 'a;
 }
 
+type ('a, 'b) total_step = 'a -> ('b, string) result
+
+(* General n-stage composition for a homogeneous representation level.  The
+   heterogeneous concrete projections above remain the readable API for the
+   first three levels; this recursive operator is the extension mechanism for
+   arbitrary n. *)
+let rec stage_n (count : int) (step : ('a, 'a) total_step) (value : 'a) =
+  if count <= 0 then Ok value
+  else
+    match step value with
+    | Error message -> Error message
+    | Ok next -> stage_n (count - 1) step next
+
+let stage_n_checked count step value =
+  if count < 0 then Error "negative stage count"
+  else stage_n count step value
+
 let mix (interpreter : ('program, 'data, 'result) interpreter)
     (program : 'program) : ('data, 'result) residual =
   fun data -> interpreter program data
@@ -84,4 +101,3 @@ let core_generator : (expr, (string * value) list, value) generator =
 
 let core_stage2 = projection2 core_interpreter
 let core_stage3 = projection3 core_generator
-
