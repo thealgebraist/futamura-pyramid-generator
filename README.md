@@ -199,3 +199,21 @@ representations and a self-applicable specializer. The file compiles with:
 ```sh
 coqc -q FutamuraProjectionN.v
 ```
+
+## Erased recursive tower observer
+
+`TypedTowerObserver.v` adds the static gate used before specialization.  It
+describes the type/stage tower separately from object-language values and
+checks three recursive properties in `Prop`: declarations are explicit,
+types are meaningful, and dependencies are ordered.  A backward dependency
+and a zero-level code type are proved unconstructible.  The accepted proof is
+passed to `accept`, but because it is a proof in `Prop` it is erased by
+extraction and cannot affect runtime values:
+
+```sh
+coqc -q TypedTowerObserver.v
+```
+
+This is the CompCert-style boundary for the project: the observer is a
+verified front-end pass, while the extracted executable can remain an OCaml
+specializer that emits the restricted C++23 target.

@@ -73,7 +73,7 @@ echo "[8/9] deterministic OCaml expression sweep"
   "$root/core_fuzz_tests.ml"
 "$tmp/fuzz" | grep -q 'PASS fuzz: 10000 deterministic expressions'
 
-echo "[9/9] invalid DSL rejection"
+echo "[9/10] invalid DSL rejection"
 if "$tmp/pyramid_generator" \
   'SELECT TOP 1 FROM PYRAMIDS WHERE BUILT_YEAR CONTAINS 2' \
   > /dev/null 2> "$tmp/error"; then
@@ -81,5 +81,13 @@ if "$tmp/pyramid_generator" \
     exit 1
 fi
 grep -q 'numeric CONTAINS' "$tmp/error"
+
+echo "[10/10] Coq recursive tower observer"
+if command -v coqc >/dev/null 2>&1; then
+    (cd "$root" && coqc -q TypedTowerObserver.v)
+else
+    echo "coqc not found" >&2
+    exit 1
+fi
 
 echo "SANITY PASS: all checks succeeded"
