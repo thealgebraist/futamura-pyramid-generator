@@ -222,3 +222,8 @@ specializer that emits the restricted C++23 target.
 target AST, an executable constant-folding pass, and the theorem
 `compiler_semantics_preserved`.  It is a small complete semantic-preservation
 example that can be extended with variables, records, and residual code.
+
+`CertifiedStagedPass.v` makes the staging invariant intrinsic: `code level`
+ carries its quotation level in its type, `quote` raises that level, and the
+ theorem `staged_residualization_correct` proves that residualization at any
+ level preserves the source meaning.
