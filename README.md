@@ -188,3 +188,14 @@ on stale generated artifacts in the repository.
 
 It also runs 10,000 deterministic expression shapes through evaluation,
 specialization, residual rendering, and resource estimation.
+
+## Coq account of projection n
+
+`FutamuraProjectionN.v` formalizes the semantic contracts for projections 1,
+2, and 3 from one explicit `mix_correct` law. It deliberately does not claim
+an untyped fourth projection: higher projections require a typed tower of
+representations and a self-applicable specializer. The file compiles with:
+
+```sh
+coqc -q FutamuraProjectionN.v
+```
