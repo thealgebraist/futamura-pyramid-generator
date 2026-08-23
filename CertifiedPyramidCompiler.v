@@ -108,6 +108,29 @@ Proof.
   unfold parse_and_compile; rewrite parsed; reflexivity.
 Qed.
 
+Definition run_tokens (tokens : list token) (rows : list pyramid)
+  : option (list pyramid) :=
+  match parse_and_compile tokens with
+  | Some compiled => Some (run_compiled compiled rows)
+  | None => None
+  end.
+
+Theorem run_tokens_correct : forall tokens q rows,
+  parse tokens = Some q ->
+  run_tokens tokens rows = Some (select q rows).
+Proof.
+  intros tokens q rows parsed.
+  unfold run_tokens.
+  rewrite (parse_and_compile_some tokens q parsed).
+  simpl.
+  rewrite compile_query_correct.
+  reflexivity.
+Qed.
+
+Lemma run_tokens_rejects_empty : forall rows,
+  run_tokens [] rows = None.
+Proof. reflexivity. Qed.
+
 Theorem parse_and_compile_correct : forall tokens q rows,
   parse tokens = Some q ->
   run_compiled (match parse_and_compile tokens with
