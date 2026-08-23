@@ -40,6 +40,15 @@ let () =
   | Ok 7 -> ()
   | _ -> failwith "stage n recursive case failed"
   end;
+  begin match stage_n_checked 10 increment 0 with
+  | Ok 10 -> ()
+  | _ -> failwith "deep stage n case failed"
+  end;
+  let fail_after_two x = if x >= 2 then Error "stage failure" else Ok (x + 1) in
+  begin match stage_n_checked 5 fail_after_two 0 with
+  | Error "stage failure" -> ()
+  | Ok _ | Error _ -> failwith "stage error was not propagated"
+  end;
   begin match stage_n_checked (-1) increment 4 with
   | Error _ -> ()
   | Ok _ -> failwith "negative stage count accepted"
