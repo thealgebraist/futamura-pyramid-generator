@@ -229,6 +229,12 @@ cp "$root/differential_extracted.ml" "$tmp/"
   ./differential_extracted_driver | grep -q 'PASS extracted specialization calculus'
 )
 
+echo "[10-extra-analogues] Coq query-compilation and normalization analogues"
+(cd "$root" && coqc -q ProjectionAnalogues.v && coqchk -silent ProjectionAnalogues)
+
+echo "[10-extra-curry-howard] Curry--Howard fourth-projection derivation"
+(cd "$root" && coqc -q CurryHowardFourth.v && coqchk -silent CurryHowardFourth)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 
