@@ -91,13 +91,17 @@ Theorem dual_semantics :
       eval static dynamic (derivative e).
 Proof.
   intros static dynamic.
-  induction e; simpl; try split; try reflexivity.
+  induction e; simpl; try reflexivity.
   - destruct IHe1 as [px tx].
     destruct IHe2 as [py ty].
-    split; simpl; [rewrite <- px, <- py | rewrite <- tx, <- ty]; reflexivity.
+    split; cbn.
+    + f_equal; [exact px | exact py].
+    + f_equal; [exact tx | exact ty].
   - destruct IHe1 as [px tx].
     destruct IHe2 as [py ty].
-    split; simpl; [rewrite <- px, <- py | rewrite <- tx, <- ty]; reflexivity.
+    split; cbn.
+    + f_equal; [exact px | exact py].
+    + f_equal; [exact tx | exact ty].
 Qed.
 
 Fixpoint sum (f : nat -> nat) (n : nat) : nat :=
