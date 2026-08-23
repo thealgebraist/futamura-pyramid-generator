@@ -210,6 +210,9 @@ echo "[10-extra-quoted] Coq quoted representation and typed stage 4"
 echo "[10-extra-intrinsic] Coq intrinsically typed stage-4 syntax"
 (cd "$root" && coqc -q IntrinsicStage4.v)
 
+echo "[10-extra-kernel] Coq kernel checks quoted and intrinsic stage 4"
+(cd "$root" && coqchk -silent TypedQuotedFutamura IntrinsicStage4)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 
