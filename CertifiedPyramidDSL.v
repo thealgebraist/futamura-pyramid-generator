@@ -66,3 +66,20 @@ Proof.
     + apply IH.
 Qed.
 
+Lemma select_rows_match : forall q rows,
+  Forall (fun p => matches q p = true) (select q rows).
+Proof.
+  intros q rows; revert q.
+  induction rows as [|p rows IH]; intros q; simpl.
+  - constructor.
+  - destruct (matches q p) eqn:hm.
+    + destruct (limit q) as [|n] eqn:hl; simpl.
+      * constructor.
+      * constructor; [exact hm|].
+        change (Forall
+          (fun p => matches
+             {| limit := n; required_year := required_year q |} p = true)
+          (select {| limit := n; required_year := required_year q |} rows)).
+        apply IH.
+    + apply IH.
+Qed.

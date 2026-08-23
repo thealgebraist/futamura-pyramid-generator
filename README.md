@@ -248,7 +248,8 @@ fixed-year predicates, bounded top selection, and the theorem
 `select_respects_limit`, which proves that a query cannot emit more rows than
 its declared limit. `CertifiedPyramidExtraction.v` extracts this query
 interpreter to OCaml, and `certified_pyramid_driver.ml` executes a fixed-year
-`TOP 1` query against sample rows.
+`TOP 1` query against sample rows. `select_rows_match` additionally proves
+that every emitted row satisfies the query predicate.
 
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
