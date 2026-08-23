@@ -256,7 +256,8 @@ and proves `compile_query_correct`: executing the compiled predicate and limit
 is extensionally equal to interpreting the original query. The corresponding
 extraction module and driver execute the compiled query after Coq extraction.
 The compiler-level theorems `compiled_respects_limit` and `compiled_rows_match`
-carry the query safety invariants through this boundary.
+carry the query safety invariants through this boundary. `compiled_rows_from_input`
+also proves that compilation cannot fabricate rows absent from the database.
 
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
