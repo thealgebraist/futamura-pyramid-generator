@@ -219,6 +219,16 @@ echo "[10-extra-calculus] Coq specialization/differentiation/accumulation laws"
 echo "[10-extra-staged-calculus] Coq quoted calculus pass"
 (cd "$root" && coqc -q DifferentialQuoted.v && coqchk -silent DifferentialQuoted)
 
+echo "[10-extra-extraction] extracted Coq calculus executable"
+(cd "$root" && coqc -q DifferentialExtraction.v)
+cp "$root/differential_extracted.ml" "$tmp/"
+(
+  cd "$tmp"
+  "$ocamlc" -o differential_extracted_driver differential_extracted.ml \
+    "$root/differential_extracted_driver.ml"
+  ./differential_extracted_driver | grep -q 'PASS extracted specialization calculus'
+)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 
