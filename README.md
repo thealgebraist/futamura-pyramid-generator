@@ -227,3 +227,7 @@ example that can be extended with variables, records, and residual code.
  carries its quotation level in its type, `quote` raises that level, and the
  theorem `staged_residualization_correct` proves that residualization at any
  level preserves the source meaning.
+
+`CertifiedExtraction.v` is the executable boundary.  It extracts the
+verified `compile` function to `certified_core_extracted.ml`; the sanity suite
+compiles both the generated interface and implementation with OCaml.
