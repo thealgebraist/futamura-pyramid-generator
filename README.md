@@ -180,6 +180,11 @@ retaining the concrete typed APIs for stages 1–3.
 depend on implementation helpers, and the phantom stage identities and
 Peano-indexed witnesses are checked against the implementation by `ocamlc`.
 
+`typed_core.ml` provides the intrinsically typed DSL used for the total core:
+`TAdd` accepts only integer expressions, `TEq` compares equal types, and
+`TIf` requires a boolean test and equal branch types. Its evaluator returns a
+plain OCaml value with no runtime type-error path.
+
 ## Non-executing resource sanity pass
 
 `resource_sanity.ml` performs a separate structural pass over an expression.

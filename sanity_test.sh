@@ -35,6 +35,11 @@ cp "$root/core_futamura_n.ml" "$tmp/core_futamura_n.ml"
   "$root/core_futamura_n_tests.ml"
 "$tmp/core_futamura_n" | grep -q 'PASS total Futamura stages 1-3'
 
+echo "[3c/12] intrinsically typed total DSL"
+"$ocamlc" -o "$tmp/typed_core" \
+  "$root/typed_core.ml" "$root/typed_core_tests.ml"
+"$tmp/typed_core" | grep -q 'PASS intrinsically typed total DSL'
+
 echo "[4/9] non-executing resource analysis"
 "$ocamlc" -o "$tmp/resources" \
   "$root/core_specializer.ml" "$root/resource_sanity.ml" \
