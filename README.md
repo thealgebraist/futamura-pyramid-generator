@@ -251,6 +251,10 @@ interpreter to OCaml, and `certified_pyramid_driver.ml` executes a fixed-year
 `TOP 1` query against sample rows. `select_rows_match` additionally proves
 that every emitted row satisfies the query predicate.
 
+`CertifiedPyramidCompiler.v` defines the residual compiled-query representation
+and proves `compile_query_correct`: executing the compiled predicate and limit
+is extensionally equal to interpreting the original query.
+
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
 boundary explicit through a represented compiler-generator rather than
