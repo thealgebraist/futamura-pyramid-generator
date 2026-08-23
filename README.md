@@ -176,6 +176,10 @@ included in the full sanity suite. `stage_n_checked` recursively applies a
 homogeneous total stage transformation for arbitrary non-negative `n`, while
 retaining the concrete typed APIs for stages 1–3.
 
+`core_futamura_n.mli` publishes the boundary explicitly: consumers cannot
+depend on implementation helpers, and the phantom stage identities and
+Peano-indexed witnesses are checked against the implementation by `ocamlc`.
+
 ## Non-executing resource sanity pass
 
 `resource_sanity.ml` performs a separate structural pass over an expression.

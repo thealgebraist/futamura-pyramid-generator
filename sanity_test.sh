@@ -26,8 +26,12 @@ echo "[3/9] second projection: pure OCaml compiler"
 test "$("$tmp/second" | grep -c '^PASS ')" -eq 4
 
 echo "[3b/11] total Futamura stages 1-3"
-"$ocamlc" -o "$tmp/core_futamura_n" \
-  "$root/core_specializer.ml" "$root/core_futamura_n.ml" \
+cp "$root/core_futamura_n.mli" "$tmp/core_futamura_n.mli"
+cp "$root/core_futamura_n.ml" "$tmp/core_futamura_n.ml"
+"$ocamlc" -c "$tmp/core_futamura_n.mli"
+"$ocamlc" -I "$tmp" -c "$tmp/core_futamura_n.ml"
+"$ocamlc" -I "$tmp" -o "$tmp/core_futamura_n" \
+  "$root/core_specializer.ml" "$tmp/core_futamura_n.ml" \
   "$root/core_futamura_n_tests.ml"
 "$tmp/core_futamura_n" | grep -q 'PASS total Futamura stages 1-3'
 
