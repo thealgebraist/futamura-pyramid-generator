@@ -244,7 +244,7 @@ many nodes as the source AST, and therefore cannot grow exponentially in this
 pass.
 
 `CertifiedPyramidDSL.v` formalizes the first domain fragment: pyramid records,
-fixed-year and minimum-height predicates, bounded top selection, and the theorem
+identifier, fixed-year, and minimum-height predicates, bounded top selection, and the theorem
 `select_respects_limit`, which proves that a query cannot emit more rows than
 its declared limit. `CertifiedPyramidExtraction.v` extracts this query
 interpreter to OCaml, and `certified_pyramid_driver.ml` executes a fixed-year
