@@ -25,6 +25,12 @@ echo "[3/9] second projection: pure OCaml compiler"
   "$root/core_second_projection_tests.ml"
 test "$("$tmp/second" | grep -c '^PASS ')" -eq 4
 
+echo "[3b/11] total Futamura stages 1-3"
+"$ocamlc" -o "$tmp/core_futamura_n" \
+  "$root/core_specializer.ml" "$root/core_futamura_n.ml" \
+  "$root/core_futamura_n_tests.ml"
+"$tmp/core_futamura_n" | grep -q 'PASS total Futamura stages 1-3'
+
 echo "[4/9] non-executing resource analysis"
 "$ocamlc" -o "$tmp/resources" \
   "$root/core_specializer.ml" "$root/resource_sanity.ml" \
@@ -109,6 +115,13 @@ if command -v coqc >/dev/null 2>&1; then
             certified_pyramid_compiler_extracted.cmo \
             certified_pyramid_compiler_driver.ml && \
         ./certified_pyramid_compiler_driver && \
+        coqc -q CertifiedPyramidEndToEndExtraction.v && \
+        ocamlc -c certified_pyramid_end_to_end.mli && \
+        ocamlc -c certified_pyramid_end_to_end.ml && \
+        ocamlc -o certified_pyramid_end_to_end_driver \
+            certified_pyramid_end_to_end.cmo \
+            certified_pyramid_end_to_end_driver.ml && \
+        ./certified_pyramid_end_to_end_driver && \
         coqc -q CertifiedStagedExtraction.v && \
         ocamlc -c certified_staged_extracted.mli && \
         ocamlc -c certified_staged_extracted.ml && \

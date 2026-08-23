@@ -160,6 +160,20 @@ ocamlc -o core_second_projection_tests \
 ./core_second_projection_tests
 ```
 
+## Total OCaml Futamura tower (stages 1–3)
+
+`core_futamura_n.ml` consolidates the pure core into a total, typed tower:
+
+```text
+projection1: interpreter + program -> residual
+projection2: interpreter -> compiler
+projection3: generator -> compiler-generator
+```
+
+All semantic functions return `('a, string) result`; the stage contract is an
+explicit algebraic value and rejects mismatched stage order. The tests are
+included in the full sanity suite.
+
 ## Non-executing resource sanity pass
 
 `resource_sanity.ml` performs a separate structural pass over an expression.
