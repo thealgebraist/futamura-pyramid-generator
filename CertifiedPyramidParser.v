@@ -28,6 +28,9 @@ Definition parse (tokens : list token) : option query :=
   | [TokTop n; TokHeightAtLeast h] => Some
       {| limit := n; required_id := None; required_country := None;
          required_year := None; minimum_height_cm := Some h |}
+  | [TokTop n; TokId i; TokCountry c; TokYear y; TokHeightAtLeast h] => Some
+      {| limit := n; required_id := Some i; required_country := Some c;
+         required_year := Some y; minimum_height_cm := Some h |}
   | _ => None
   end.
 
@@ -44,3 +47,8 @@ Lemma parse_rejects_malformed : forall n,
   parse [TokId n] = None.
 Proof. reflexivity. Qed.
 
+Lemma parse_full_query : forall n i c y h,
+  parse [TokTop n; TokId i; TokCountry c; TokYear y; TokHeightAtLeast h] =
+  Some {| limit := n; required_id := Some i; required_country := Some c;
+          required_year := Some y; minimum_height_cm := Some h |}.
+Proof. reflexivity. Qed.
