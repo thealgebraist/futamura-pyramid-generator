@@ -30,6 +30,12 @@ type stage_1
 type stage_2
 type stage_3
 
+type zero
+type 'n successor = Successor_marker of 'n
+type _ nat_witness =
+  | Z : zero nat_witness
+  | S : 'n nat_witness -> 'n successor nat_witness
+
 type 'a staged = {
   stage: stage;
   artifact: 'a;
@@ -51,6 +57,17 @@ let rec stage_n (count : int) (step : ('a, 'a) total_step) (value : 'a) =
 let stage_n_checked count step value =
   if count < 0 then Error "negative stage count"
   else stage_n count step value
+
+let rec stage_n_typed : type n. n nat_witness ->
+  ('a, 'a) total_step -> 'a -> ('a, string) result =
+  fun witness step value ->
+    match witness with
+    | Z -> Ok value
+    | S predecessor ->
+        begin match step value with
+        | Error message -> Error message
+        | Ok next -> stage_n_typed predecessor step next
+        end
 
 let mix (interpreter : ('program, 'data, 'result) interpreter)
     (program : 'program) : ('data, 'result) residual =

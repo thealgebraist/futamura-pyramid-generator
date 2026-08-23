@@ -73,4 +73,9 @@ let () =
   | Error _ -> ()
   | Ok _ -> failwith "negative stage count accepted"
   end;
+  let three_steps = S (S (S Z)) in
+  begin match stage_n_typed three_steps increment 4 with
+  | Ok 7 -> ()
+  | _ -> failwith "typed n-stage witness failed"
+  end;
   print_endline "PASS total Futamura stages 1-3"
