@@ -94,6 +94,12 @@ if command -v coqc >/dev/null 2>&1; then
         ocamlc -o certified_extracted_driver certified_core_extracted.cmo \
             certified_extracted_driver.ml && \
         ./certified_extracted_driver && \
+        coqc -q CertifiedPyramidExtraction.v && \
+        ocamlc -c certified_pyramid_extracted.mli && \
+        ocamlc -c certified_pyramid_extracted.ml && \
+        ocamlc -o certified_pyramid_driver certified_pyramid_extracted.cmo \
+            certified_pyramid_driver.ml && \
+        ./certified_pyramid_driver && \
         coqc -q CertifiedStagedExtraction.v && \
         ocamlc -c certified_staged_extracted.mli && \
         ocamlc -c certified_staged_extracted.ml && \
