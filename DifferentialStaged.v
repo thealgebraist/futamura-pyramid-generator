@@ -74,9 +74,10 @@ Theorem integrate_specialize_commutes :
     integrate (specialize static e) 0 count = integrate e static count.
 Proof.
   intros static count.
-  induction count as [| count IH]; intros e; simpl; auto.
+  unfold integrate.
+  induction count as [| count IH]; intros e; cbn [sum]; auto.
   rewrite (specialize_correct static count e).
-  apply IH.
+  f_equal; apply IH.
 Qed.
 
 Definition example : Expr :=
