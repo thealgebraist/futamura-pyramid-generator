@@ -1,6 +1,7 @@
 (** Executable projection contracts for the verified core. *)
 
 Set Universe Polymorphism.
+Require Import CertifiedStagedPass.
 
 Section Projection.
   Context {Program Data Result : Type}.
@@ -39,3 +40,18 @@ Section Projection.
     fun i => s 0 i.
 
 End Projection.
+
+(** Concrete first projection for the stage-indexed arithmetic language. *)
+Definition staged_interpreter : source -> nat -> nat :=
+  fun p input => eval_source input p.
+
+Definition staged_mix (level : nat) (p : source) : nat -> nat :=
+  fun input => run input (residualize (level := level) p).
+
+Theorem staged_first_projection : forall level p input,
+  staged_mix level p input = staged_interpreter p input.
+Proof.
+  intros level p input.
+  unfold staged_mix, staged_interpreter.
+  apply residualize_correct.
+Qed.

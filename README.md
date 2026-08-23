@@ -237,4 +237,6 @@ compiles both the generated interface and implementation with OCaml.
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
 boundary explicit through a represented compiler-generator rather than
-pretending that an untyped function can safely apply itself.
+pretending that an untyped function can safely apply itself.  The concrete
+`staged_first_projection` theorem then instantiates the first equation with
+the dynamic-input residualizer from `CertifiedStagedPass.v`.
