@@ -91,7 +91,13 @@ if command -v coqc >/dev/null 2>&1; then
         ocamlc -c certified_core_extracted.ml && \
         ocamlc -o certified_extracted_driver certified_core_extracted.cmo \
             certified_extracted_driver.ml && \
-        ./certified_extracted_driver)
+        ./certified_extracted_driver && \
+        coqc -q CertifiedStagedExtraction.v && \
+        ocamlc -c certified_staged_extracted.mli && \
+        ocamlc -c certified_staged_extracted.ml && \
+        ocamlc -o certified_staged_driver certified_staged_extracted.cmo \
+            certified_staged_driver.ml && \
+        ./certified_staged_driver)
 else
     echo "coqc not found" >&2
     exit 1
