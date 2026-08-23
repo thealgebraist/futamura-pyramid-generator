@@ -88,7 +88,7 @@ Example specialized_example :
 Proof. vm_compute. reflexivity. Qed.
 
 Example derivative_example :
-  eval 5 3 (derivative example) = 16.
+  eval 5 3 (derivative example) = 13.
 Proof. vm_compute. reflexivity. Qed.
 
 Example integrated_example :
