@@ -59,3 +59,20 @@ Proof.
         apply IH.
     + apply IH.
 Qed.
+
+Theorem compiled_respects_limit : forall q rows,
+  length (run_compiled (compile_query q) rows) <= limit q.
+Proof.
+  intros q rows.
+  rewrite compile_query_correct.
+  apply select_respects_limit.
+Qed.
+
+Theorem compiled_rows_match : forall q rows,
+  Forall (fun p => matches q p = true)
+    (run_compiled (compile_query q) rows).
+Proof.
+  intros q rows.
+  rewrite compile_query_correct.
+  apply select_rows_match.
+Qed.
