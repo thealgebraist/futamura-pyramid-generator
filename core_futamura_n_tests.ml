@@ -23,6 +23,11 @@ let () =
   | VInt 5 -> ()
   | _ -> failwith "stage 3 produced the wrong value"
   end;
+  let alternate_interpreter _program environment = Ok (VInt (List.length environment)) in
+  begin match core_stage3.artifact alternate_interpreter program ["x", VInt 0] with
+  | Ok (VInt 1) -> ()
+  | _ -> failwith "stage 3 ignored its interpreter argument"
+  end;
   begin match contract Stage3 Stage3 Stage3 with
   | Ok Stage3 -> ()
   | _ -> failwith "valid stage contract rejected"
