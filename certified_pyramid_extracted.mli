@@ -19,10 +19,12 @@ val eqb : nat -> nat -> bool
 
 val leb : nat -> nat -> bool
 
-type pyramid = { pyramid_id : nat; built_year : nat; height_cm : nat }
+type pyramid = { pyramid_id : nat; country_id : nat; built_year : nat;
+                 height_cm : nat }
 
 type query = { limit : nat; required_id : nat option;
-               required_year : nat option; minimum_height_cm : nat option }
+               required_country : nat option; required_year : nat option;
+               minimum_height_cm : nat option }
 
 val matches : query -> pyramid -> bool
 
