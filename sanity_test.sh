@@ -40,6 +40,17 @@ echo "[3c/12] intrinsically typed total DSL"
   "$root/typed_core.ml" "$root/typed_core_tests.ml"
 "$tmp/typed_core" | grep -q 'PASS intrinsically typed total DSL'
 
+echo "[3d/13] independent Coq/OCaml typed-DSL result"
+if command -v coqc >/dev/null 2>&1; then
+    (cd "$root" && coqc -q IndependentTypedCore.v)
+else
+    echo "coqc not found" >&2
+    exit 1
+fi
+"$ocamlc" -o "$tmp/independent_compare" \
+  "$root/typed_core.ml" "$root/independent_compare.ml"
+"$tmp/independent_compare" | grep -q 'PASS independent Coq/OCaml result: 24'
+
 echo "[4/9] non-executing resource analysis"
 "$ocamlc" -o "$tmp/resources" \
   "$root/core_specializer.ml" "$root/resource_sanity.ml" \

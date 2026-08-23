@@ -185,6 +185,11 @@ Peano-indexed witnesses are checked against the implementation by `ocamlc`.
 `TIf` requires a boolean test and equal branch types. Its evaluator returns a
 plain OCaml value with no runtime type-error path.
 
+`IndependentTypedCore.v` is a separate Coq model of the same typed fragment.
+It proves a nontrivial nested conditional/addition expression evaluates to
+`24`; `independent_compare.ml` evaluates the corresponding OCaml term and
+checks the same result. The sanity suite runs both sides independently.
+
 ## Non-executing resource sanity pass
 
 `resource_sanity.ml` performs a separate structural pass over an expression.
