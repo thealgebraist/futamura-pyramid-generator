@@ -13,6 +13,21 @@ let () =
   | VInt 5 -> ()
   | _ -> failwith "stage 1 produced the wrong value"
   end;
+  let typed1 = projection1_typed core_interpreter program in
+  begin match typed1.typed_artifact [] with
+  | Ok (VInt 5) -> ()
+  | _ -> failwith "typed stage 1 produced the wrong value"
+  end;
+  let typed2 = projection2_typed core_interpreter in
+  begin match typed2.typed_artifact program [] with
+  | Ok (VInt 5) -> ()
+  | _ -> failwith "typed stage 2 produced the wrong value"
+  end;
+  let typed3 = projection3_typed core_generator in
+  begin match typed3.typed_artifact core_interpreter program [] with
+  | Ok (VInt 5) -> ()
+  | _ -> failwith "typed stage 3 produced the wrong value"
+  end;
   let stage2 = core_stage2.artifact program [] |> require_ok "stage 2" in
   begin match stage2 with
   | VInt 5 -> ()

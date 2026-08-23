@@ -26,6 +26,10 @@ type stage =
   | Stage2
   | Stage3
 
+type stage_1
+type stage_2
+type stage_3
+
 type 'a staged = {
   stage: stage;
   artifact: 'a;
@@ -51,6 +55,23 @@ let stage_n_checked count step value =
 let mix (interpreter : ('program, 'data, 'result) interpreter)
     (program : 'program) : ('data, 'result) residual =
   fun data -> interpreter program data
+
+type ('level, 'artifact) typed_staged = {
+  typed_stage: stage;
+  typed_artifact: 'artifact;
+}
+
+let projection1_typed interpreter program :
+    (stage_1, ('data, 'result) residual) typed_staged =
+  { typed_stage = Stage1; typed_artifact = mix interpreter program }
+
+let projection2_typed interpreter :
+    (stage_2, ('program, 'data, 'result) compiler) typed_staged =
+  { typed_stage = Stage2; typed_artifact = fun program -> mix interpreter program }
+
+let projection3_typed generator :
+    (stage_3, ('program, 'data, 'result) generator) typed_staged =
+  { typed_stage = Stage3; typed_artifact = generator }
 
 (* Stage 1: interpreter + fixed program -> residual program. *)
 let projection1 interpreter program =
