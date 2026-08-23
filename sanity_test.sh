@@ -101,6 +101,13 @@ if command -v coqc >/dev/null 2>&1; then
         ocamlc -o certified_pyramid_driver certified_pyramid_extracted.cmo \
             certified_pyramid_driver.ml && \
         ./certified_pyramid_driver && \
+        coqc -q CertifiedPyramidCompilerExtraction.v && \
+        ocamlc -c certified_pyramid_compiler_extracted.mli && \
+        ocamlc -c certified_pyramid_compiler_extracted.ml && \
+        ocamlc -o certified_pyramid_compiler_driver \
+            certified_pyramid_compiler_extracted.cmo \
+            certified_pyramid_compiler_driver.ml && \
+        ./certified_pyramid_compiler_driver && \
         coqc -q CertifiedStagedExtraction.v && \
         ocamlc -c certified_staged_extracted.mli && \
         ocamlc -c certified_staged_extracted.ml && \

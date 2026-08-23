@@ -253,7 +253,8 @@ that every emitted row satisfies the query predicate.
 
 `CertifiedPyramidCompiler.v` defines the residual compiled-query representation
 and proves `compile_query_correct`: executing the compiled predicate and limit
-is extensionally equal to interpreting the original query.
+is extensionally equal to interpreting the original query. The corresponding
+extraction module and driver execute the compiled query after Coq extraction.
 
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
