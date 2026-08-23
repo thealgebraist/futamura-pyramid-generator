@@ -52,3 +52,7 @@ Lemma parse_full_query : forall n i c y h,
   Some {| limit := n; required_id := Some i; required_country := Some c;
           required_year := Some y; minimum_height_cm := Some h |}.
 Proof. reflexivity. Qed.
+
+Lemma parse_rejects_duplicate_year : forall n y1 y2,
+  parse [TokTop n; TokYear y1; TokYear y2] = None.
+Proof. reflexivity. Qed.
