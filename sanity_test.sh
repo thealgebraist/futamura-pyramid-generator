@@ -204,6 +204,9 @@ fi
 echo "[10-extra] Coq fourth-projection type and equations"
 (cd "$root" && coqc -q CertifiedFourthProjection.v)
 
+echo "[10-extra-quoted] Coq quoted representation and typed stage 4"
+(cd "$root" && coqc -q TypedQuotedFutamura.v)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 
