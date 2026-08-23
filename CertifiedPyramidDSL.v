@@ -117,3 +117,23 @@ Proof.
         apply IH.
     + apply IH.
 Qed.
+
+Lemma select_rows_from_input : forall q rows p,
+  In p (select q rows) -> In p rows.
+Proof.
+  intros q rows; revert q.
+  induction rows as [|x rows IH]; intros q p hp; simpl in *.
+  - contradiction.
+  - destruct (matches q x) eqn:hm.
+    + destruct (limit q) as [|n] eqn:hl; simpl in hp.
+      * contradiction.
+      * destruct hp as [same|tail].
+        -- left; exact same.
+        -- right; apply IH with
+             (q := {| limit := n; required_id := required_id q;
+                      required_country := required_country q;
+                      required_year := required_year q;
+                      minimum_height_cm := minimum_height_cm q |});
+             exact tail.
+    + right; apply IH with (q := q); exact hp.
+Qed.

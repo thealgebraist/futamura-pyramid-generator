@@ -76,3 +76,11 @@ Proof.
   rewrite compile_query_correct.
   apply select_rows_match.
 Qed.
+
+Theorem compiled_rows_from_input : forall q rows p,
+  In p (run_compiled (compile_query q) rows) -> In p rows.
+Proof.
+  intros q rows p hp.
+  rewrite compile_query_correct in hp.
+  apply select_rows_from_input with (q := q); exact hp.
+Qed.
