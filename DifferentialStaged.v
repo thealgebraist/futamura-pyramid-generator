@@ -62,6 +62,44 @@ Theorem derivative_product_rule :
                             (Mul x (derivative y))).
 Proof. reflexivity. Qed.
 
+Record Dual := {
+  primal : nat;
+  tangent : nat
+}.
+
+Definition dual_add (x y : Dual) : Dual :=
+  {| primal := primal x + primal y;
+     tangent := tangent x + tangent y |}.
+
+Definition dual_mul (x y : Dual) : Dual :=
+  {| primal := primal x * primal y;
+     tangent := tangent x * primal y + primal x * tangent y |}.
+
+Fixpoint eval_dual (static dynamic : nat) (e : Expr) : Dual :=
+  match e with
+  | Const n => {| primal := n; tangent := 0 |}
+  | Static => {| primal := static; tangent := 0 |}
+  | Var => {| primal := dynamic; tangent := 1 |}
+  | Add x y => dual_add (eval_dual static dynamic x) (eval_dual static dynamic y)
+  | Mul x y => dual_mul (eval_dual static dynamic x) (eval_dual static dynamic y)
+  end.
+
+Theorem dual_semantics :
+  forall static dynamic e,
+    primal (eval_dual static dynamic e) = eval static dynamic e /\
+    tangent (eval_dual static dynamic e) =
+      eval static dynamic (derivative e).
+Proof.
+  intros static dynamic.
+  induction e; simpl; try split; try reflexivity.
+  - destruct IHe1 as [px tx].
+    destruct IHe2 as [py ty].
+    split; simpl; [rewrite px, py | rewrite tx, ty]; reflexivity.
+  - destruct IHe1 as [px tx].
+    destruct IHe2 as [py ty].
+    split; simpl; [rewrite px, py | rewrite tx, ty]; reflexivity.
+Qed.
+
 Fixpoint sum (f : nat -> nat) (n : nat) : nat :=
   match n with
   | O => 0
