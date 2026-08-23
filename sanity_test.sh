@@ -89,6 +89,7 @@ if command -v coqc >/dev/null 2>&1; then
         coqc -q CertifiedProjection.v && \
         coqc -q CertifiedResource.v && \
         coqc -q CertifiedPyramidDSL.v && \
+        coqc -q CertifiedPyramidParser.v && \
         coqc -q CertifiedPyramidCompiler.v && \
         coqc -q CertifiedExtraction.v && ocamlc -c certified_core_extracted.mli && \
         ocamlc -c certified_core_extracted.ml && \

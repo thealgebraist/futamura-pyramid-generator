@@ -259,6 +259,10 @@ The compiler-level theorems `compiled_respects_limit` and `compiled_rows_match`
 carry the query safety invariants through this boundary. `compiled_rows_from_input`
 also proves that compilation cannot fabricate rows absent from the database.
 
+`CertifiedPyramidParser.v` adds a typed token boundary for `TOP`, identifier,
+country, year, and minimum-height clauses, with proofs for accepted `TOP`
+syntax and rejection of empty or malformed token streams.
+
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
 boundary explicit through a represented compiler-generator rather than
