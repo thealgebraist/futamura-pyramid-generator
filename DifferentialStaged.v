@@ -94,10 +94,10 @@ Proof.
   induction e; simpl; try split; try reflexivity.
   - destruct IHe1 as [px tx].
     destruct IHe2 as [py ty].
-    split; simpl; [rewrite px, py | rewrite tx, ty]; reflexivity.
+    split; simpl; [rewrite <- px, <- py | rewrite <- tx, <- ty]; reflexivity.
   - destruct IHe1 as [px tx].
     destruct IHe2 as [py ty].
-    split; simpl; [rewrite px, py | rewrite tx, ty]; reflexivity.
+    split; simpl; [rewrite <- px, <- py | rewrite <- tx, <- ty]; reflexivity.
 Qed.
 
 Fixpoint sum (f : nat -> nat) (n : nat) : nat :=
