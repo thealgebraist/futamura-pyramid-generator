@@ -20,6 +20,31 @@ Definition mix {A B : Type}
     (f : Quote (A -> B)) (x : Quote A) : Quote B :=
   quote (unquote f (unquote x)).
 
+(** An explicit representation tower for arbitrary stage depth. *)
+Fixpoint QuoteN (n : nat) (A : Type) : Type :=
+  match n with
+  | O => A
+  | S n' => Quote (QuoteN n' A)
+  end.
+
+Fixpoint quote_n (n : nat) (A : Type) (value : A) : QuoteN n A :=
+  match n with
+  | O => value
+  | S n' => quote (quote_n n' A value)
+  end.
+
+Fixpoint unquote_n (n : nat) (A : Type) : QuoteN n A -> A :=
+  match n with
+  | O => fun value => value
+  | S n' => fun value => unquote_n n' A (unquote value)
+  end.
+
+Theorem quote_n_unquote_n :
+  forall n (A : Type) (value : A), unquote_n n A (quote_n n A value) = value.
+Proof.
+  induction n as [| n IH]; simpl; auto.
+Qed.
+
 Theorem quote_unquote : forall (A : Type) (x : Quote A), quote (unquote x) = x.
 Proof. intros A [x]. reflexivity. Qed.
 
@@ -90,6 +115,11 @@ Example stage4_executes :
   unquote (nat_projection4 (quote add_generator))
     (fun p d => p + d) 7 5 = 12.
 Proof. reflexivity. Qed.
+
+Example four_level_representation_roundtrip :
+  unquote_n 4 NatGenerator (quote_n 4 NatGenerator add_generator)
+    (fun p d => p + d) 7 5 = 12.
+Proof. simpl. reflexivity. Qed.
 
 (** A total arithmetic object language used to exercise the quoted boundary. *)
 Inductive Expr : Type -> Type :=
