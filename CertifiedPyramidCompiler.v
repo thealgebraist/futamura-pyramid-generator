@@ -1,6 +1,7 @@
 (** Compiler boundary for the certified pyramid DSL. *)
 
 Require Import CertifiedPyramidDSL.
+Require Import CertifiedPyramidParser.
 Require Import List.
 Import ListNotations.
 
@@ -91,4 +92,22 @@ Proof.
   intros q rows hlimit.
   rewrite compile_query_correct.
   apply select_zero; exact hlimit.
+Qed.
+
+Definition parse_and_compile (tokens : list token) : option compiled_query :=
+  match parse tokens with
+  | Some q => Some (compile_query q)
+  | None => None
+  end.
+
+Theorem parse_and_compile_correct : forall tokens q rows,
+  parse tokens = Some q ->
+  run_compiled (match parse_and_compile tokens with
+               | Some c => c
+               | None => compile_query q
+               end) rows = select q rows.
+Proof.
+  intros tokens q rows parsed.
+  unfold parse_and_compile; rewrite parsed; simpl.
+  apply compile_query_correct.
 Qed.

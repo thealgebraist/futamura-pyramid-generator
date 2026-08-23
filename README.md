@@ -258,6 +258,8 @@ extraction module and driver execute the compiled query after Coq extraction.
 The compiler-level theorems `compiled_respects_limit` and `compiled_rows_match`
 carry the query safety invariants through this boundary. `compiled_rows_from_input`
 also proves that compilation cannot fabricate rows absent from the database.
+`parse_and_compile_correct` composes the token parser and compiler into one
+verified entry point.
 
 `CertifiedPyramidParser.v` adds a typed token boundary for `TOP`, identifier,
 country, year, and minimum-height clauses, with proofs for accepted `TOP`
