@@ -8,6 +8,15 @@ let require_ok label value =
 
 let () =
   let program = EAdd (EInt 2, EInt 3) in
+  let complex_program =
+    ELet
+      ( "x",
+        EInt 20,
+        EIf
+          ( EEq (EVar "x", EInt 20),
+            EAdd (EVar "x", EInt 22),
+            EInt 0 ) )
+  in
   let stage1 = require_ok "stage 1" (core_stage1 program []) in
   begin match stage1 with
   | VInt 5 -> ()
@@ -37,6 +46,20 @@ let () =
   begin match stage3 with
   | VInt 5 -> ()
   | _ -> failwith "stage 3 produced the wrong value"
+  end;
+  let check_complex label result =
+    match require_ok label result with
+    | VInt 42 -> ()
+    | _ -> failwith (label ^ " produced the wrong value")
+  in
+  check_complex "complex stage 1" (core_stage1 complex_program []);
+  check_complex "complex stage 2" (core_stage2.artifact complex_program []);
+  check_complex "complex stage 3"
+    (core_stage3.artifact core_interpreter complex_program []);
+  let malformed = EIf (EInt 1, EInt 2, EInt 3) in
+  begin match core_stage1 malformed [] with
+  | Error _ -> ()
+  | Ok _ -> failwith "ill-typed DSL program was accepted"
   end;
   let alternate_interpreter _program environment = Ok (VInt (List.length environment)) in
   begin match core_stage3.artifact alternate_interpreter program ["x", VInt 0] with
