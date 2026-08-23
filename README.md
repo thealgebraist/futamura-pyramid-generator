@@ -188,7 +188,10 @@ plain OCaml value with no runtime type-error path.
 `IndependentTypedCore.v` is a separate Coq model of the same typed fragment.
 It proves a nontrivial nested conditional/addition expression evaluates to
 `24`; `independent_compare.ml` evaluates the corresponding OCaml term and
-checks the same result. The sanity suite runs both sides independently.
+checks the same result. `complex_false` and `complex_true` additionally cover
+the false and true conditional paths, nested conditionals, boolean literals,
+and boolean equality. The sanity suite runs both sides independently and
+also compares the OCaml evaluator with Coq's extracted `24` value.
 
 `IndependentStageN.v` performs the same independent derivation for the
 general stage recurrence: Coq computes `iterate 10 0 = 10` and `iterate 3 4 =

@@ -51,6 +51,16 @@ fi
   "$root/typed_core.ml" "$root/independent_compare.ml"
 "$tmp/independent_compare" | grep -q 'PASS independent Coq/OCaml result: 24'
 
+echo "[3d-extra] compare against extracted Coq result"
+(cd "$root" && coqc -q IndependentTypedCoreExtraction.v)
+cp "$root/independent_typed_core_result.ml" "$tmp/"
+cp "$root/independent_typed_core_result.mli" "$tmp/"
+"$ocamlc" -I "$tmp" -c "$tmp/independent_typed_core_result.mli"
+"$ocamlc" -I "$tmp" -o "$tmp/independent_extracted_compare" \
+  "$tmp/independent_typed_core_result.ml" "$root/typed_core.ml" \
+  "$root/independent_extracted_compare.ml"
+"$tmp/independent_extracted_compare" | grep -q 'PASS extracted Coq/OCaml result: 24'
+
 echo "[3e/14] independent Coq/OCaml stage recurrence"
 if command -v coqc >/dev/null 2>&1; then
     (cd "$root" && coqc -q IndependentStageN.v)

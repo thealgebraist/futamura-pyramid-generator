@@ -30,5 +30,21 @@ let eval_packed (Pack expression) =
       "<typed-expression>"
 
 let example : int expr =
-  TIf (TEq (TIntLit 2, TIntLit 2), TAdd (TIntLit 1, TIntLit 4), TIntLit 0)
+  TIf
+    ( TEq (TAdd (TIntLit 2, TIntLit 3), TIntLit 5),
+      TAdd (TIntLit 7, TAdd (TIntLit 8, TIntLit 9)),
+      TIntLit 0 )
 
+(* Exercises the false branch, boolean literals, nested conditionals, and
+   equality over booleans while remaining intrinsically well typed. *)
+let complex_false : int expr =
+  TIf
+    ( TEq (TBoolLit true, TBoolLit false),
+      TAdd (TIntLit 100, TIntLit 1),
+      TIf (TBoolLit false, TIntLit 7, TAdd (TIntLit 20, TIntLit 22)) )
+
+let complex_true : bool expr =
+  TIf
+    ( TEq (TBoolLit true, TBoolLit true),
+      TIf (TBoolLit false, TBoolLit false, TBoolLit true),
+      TBoolLit false )
