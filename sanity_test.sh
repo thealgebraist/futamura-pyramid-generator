@@ -35,6 +35,23 @@ cp "$root/core_futamura_n.ml" "$tmp/core_futamura_n.ml"
   "$root/core_futamura_n_tests.ml"
 "$tmp/core_futamura_n" | grep -q 'PASS total Futamura stages 1-3'
 
+echo "[3b-extra] typed OpenGL-shaped DSL and AArch64 stage 3 artifact"
+cp "$root/core_specializer.ml" "$root/core_futamura_n.ml" "$root/core_futamura_n.mli" \
+  "$root/opengl_dsl.ml" "$root/opengl_dsl_tests.ml" "$root/opengl_emit.ml" "$tmp/"
+(
+  cd "$tmp"
+  "$ocamlc" -c core_specializer.ml
+  "$ocamlc" -c core_futamura_n.mli
+  "$ocamlc" -o opengl_dsl_tests core_specializer.cmo core_futamura_n.ml \
+    opengl_dsl.ml opengl_dsl_tests.ml
+  ./opengl_dsl_tests | grep -q 'PASS OpenGL-shaped typed void-pointer DSL and stage 3'
+  "$ocamlc" -o opengl_emit core_specializer.cmo core_futamura_n.ml \
+    opengl_dsl.ml opengl_emit.ml
+  ./opengl_emit > generated_opengl_arm64.c
+)
+"$cc" --target=aarch64-none-elf -x c -std=c11 -ffreestanding -Werror \
+  -c "$tmp/generated_opengl_arm64.c" -o "$tmp/generated_opengl_arm64.o"
+
 echo "[3c/12] intrinsically typed total DSL"
 "$ocamlc" -o "$tmp/typed_core" \
   "$root/typed_core.ml" "$root/typed_core_tests.ml"
