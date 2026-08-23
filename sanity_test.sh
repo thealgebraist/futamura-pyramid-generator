@@ -197,6 +197,9 @@ else
     exit 1
 fi
 
+echo "[10-extra] Coq fourth-projection type and equations"
+(cd "$root" && coqc -q CertifiedFourthProjection.v)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 
