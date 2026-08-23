@@ -56,6 +56,37 @@ let () =
   check_complex "complex stage 2" (core_stage2.artifact complex_program []);
   check_complex "complex stage 3"
     (core_stage3.artifact core_interpreter complex_program []);
+  (* Eight independent end-to-end programs.  Each is sent through both
+     projection 2 (fixed interpreter) and projection 3 (interpreter
+     generator), including successful and total-error paths. *)
+  let same_value left right =
+    match left, right with
+    | VInt a, VInt b -> a = b
+    | VBool a, VBool b -> a = b
+    | _ -> false
+  in
+  let cases =
+    [ (ELet ("a", EInt 6, ELet ("b", EInt 7, EAdd (EVar "a", EVar "b"))), [], Ok (VInt 13));
+      (EIf (EEq (EBool false, EBool false), EInt 9, EInt 1), [], Ok (VInt 9));
+      (EAdd (EVar "x", EVar "y"), ["x", VInt 10; "y", VInt 3], Ok (VInt 13));
+      (ELet ("x", EInt 5, EIf (EEq (EVar "x", EInt 6), EInt 99, EAdd (EVar "x", EInt 10))), [], Ok (VInt 15));
+      (EEq (EBool true, EBool true), [], Ok (VBool true));
+      (EAdd (EVar "missing", EInt 1), [], Error "unbound variable: missing");
+      (EEq (EInt 1, EBool true), [], Error "equality type mismatch");
+      (ELet ("base", EAdd (EInt 2, EInt 3), EIf (EEq (EVar "base", EInt 5), EAdd (EVar "base", EInt 8), EInt 0)), [], Ok (VInt 13)) ]
+  in
+  List.iteri
+    (fun index (expression, environment, expected) ->
+      let label = Printf.sprintf "projection case %d" (index + 1) in
+      let check actual =
+        match expected, actual with
+        | Ok wanted, Ok obtained when same_value wanted obtained -> ()
+        | Error wanted, Error obtained when wanted = obtained -> ()
+        | _ -> failwith (label ^ " mismatch")
+      in
+      check (core_stage2.artifact expression environment);
+      check (core_stage3.artifact core_interpreter expression environment))
+    cases;
   let malformed = EIf (EInt 1, EInt 2, EInt 3) in
   begin match core_stage1 malformed [] with
   | Error _ -> ()
