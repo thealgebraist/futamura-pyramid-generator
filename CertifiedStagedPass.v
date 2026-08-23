@@ -8,54 +8,61 @@ From Stdlib Require Import Lia.
 
 Inductive code : nat -> Type :=
 | CConst : forall level, nat -> code level
+| CInput : forall level, code level
 | CAdd : forall level, code level -> code level -> code level
 | CQuote : forall level, code level -> code (S level).
 
-Fixpoint run {level} (c : code level) : nat :=
+Fixpoint run {level} (input : nat) (c : code level) : nat :=
   match c with
   | CConst _ n => n
-  | CAdd _ a b => run a + run b
-  | CQuote _ inner => run inner
+  | CInput _ => input
+  | CAdd _ a b => run input a + run input b
+  | CQuote _ inner => run input inner
   end.
 
 Definition quote {level} (c : code level) : code (S level) :=
   CQuote level c.
 
 Lemma quote_preserves : forall level (c : code level),
-  run (quote c) = run c.
+  forall input, run input (quote c) = run input c.
 Proof.
-  intros level c; reflexivity.
+  intros level c input; reflexivity.
 Qed.
 
 (** A residualizer for arithmetic expressions.  The source has no runtime
     stage parameter: specialization chooses a residual code level explicitly. *)
 Inductive source : Type :=
 | SConst : nat -> source
+| SInput : source
 | SAdd : source -> source -> source.
 
 Fixpoint residualize {level} (e : source) : code level :=
   match e with
   | SConst n => CConst level n
+  | SInput => CInput level
   | SAdd a b => CAdd level (residualize a) (residualize b)
   end.
 
-Fixpoint eval_source (e : source) : nat :=
+Fixpoint eval_source (input : nat) (e : source) : nat :=
   match e with
   | SConst n => n
-  | SAdd a b => eval_source a + eval_source b
+  | SInput => input
+  | SAdd a b => eval_source input a + eval_source input b
   end.
 
 Lemma residualize_correct : forall level e,
-  run (residualize (level := level) e) = eval_source e.
+  forall input,
+  run input (residualize (level := level) e) = eval_source input e.
 Proof.
-  intros level e; induction e as [n|a IHa b IHb]; simpl.
+  intros level e; induction e as [n| |a IHa b IHb]; intros input; simpl.
+  - reflexivity.
   - reflexivity.
   - rewrite IHa, IHb; reflexivity.
 Qed.
 
 Theorem staged_residualization_correct : forall level e,
-  run (residualize (level := level) e) = eval_source e.
+  forall input,
+  run input (residualize (level := level) e) = eval_source input e.
 Proof.
   apply residualize_correct.
 Qed.
-

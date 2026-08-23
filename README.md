@@ -225,8 +225,10 @@ example that can be extended with variables, records, and residual code.
 
 `CertifiedStagedPass.v` makes the staging invariant intrinsic: `code level`
  carries its quotation level in its type, `quote` raises that level, and the
- theorem `staged_residualization_correct` proves that residualization at any
- level preserves the source meaning.
+theorem `staged_residualization_correct` proves that residualization at any
+level preserves the source meaning. The source includes a dynamic input
+constructor, so the theorem has the genuine partial-evaluation shape: static
+structure is residualized while the input remains dynamic.
 
 `CertifiedExtraction.v` is the executable boundary.  It extracts the
 verified `compile` function to `certified_core_extracted.ml`; the sanity suite
