@@ -137,3 +137,14 @@ Proof.
              exact tail.
     + right; apply IH with (q := q); exact hp.
 Qed.
+
+Lemma select_zero : forall q rows,
+  limit q = 0 -> select q rows = [].
+Proof.
+  intros q rows; revert q.
+  induction rows as [|p rows IH]; intros q hlimit; simpl.
+  - reflexivity.
+  - destruct (matches q p); simpl.
+    + rewrite hlimit; reflexivity.
+    + apply IH; exact hlimit.
+Qed.

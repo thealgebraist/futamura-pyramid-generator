@@ -84,3 +84,11 @@ Proof.
   rewrite compile_query_correct in hp.
   apply select_rows_from_input with (q := q); exact hp.
 Qed.
+
+Theorem compiled_zero : forall q rows,
+  limit q = 0 -> run_compiled (compile_query q) rows = [].
+Proof.
+  intros q rows hlimit.
+  rewrite compile_query_correct.
+  apply select_zero; exact hlimit.
+Qed.
