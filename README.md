@@ -311,3 +311,18 @@ boundary explicit through a represented compiler-generator rather than
 pretending that an untyped function can safely apply itself.  The concrete
 `staged_first_projection` theorem then instantiates the first equation with
 the dynamic-input residualizer from `CertifiedStagedPass.v`.
+
+`CertifiedFourthProjection.v` states the representation-aware fourth-level
+type: a transformer from compiler-generators to compiler-generators.  Its
+equations are kernel-checked rather than inferred from an untyped iteration.
+`TypedQuotedFutamura.v` adds `Quote`, `mix`, a proved `mix_correct` theorem,
+and the recursive `QuoteN` tower for arbitrary representation depth.
+`IntrinsicStage4.v` supplies an intrinsically typed syntax-level example with
+an executable stage-4 code transformation.
+
+`DifferentialStaged.v` formalizes a separate total arithmetic DSL with static
+and dynamic variables, symbolic differentiation, and finite accumulation.
+Coq proves both specialization/differentiation commutation and
+specialization/accumulation commutation.  `DifferentialQuoted.v` lifts those
+passes through the quoted representation, so the same equations hold for
+staged artifacts.  The sanity suite runs `coqchk` on all of these modules.
