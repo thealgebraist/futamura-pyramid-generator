@@ -87,6 +87,7 @@ if command -v coqc >/dev/null 2>&1; then
     (cd "$root" && coqc -q TypedTowerObserver.v && \
         coqc -q CertifiedCorePass.v && coqc -q CertifiedStagedPass.v && \
         coqc -q CertifiedProjection.v && \
+        coqc -q CertifiedResource.v && \
         coqc -q CertifiedExtraction.v && ocamlc -c certified_core_extracted.mli && \
         ocamlc -c certified_core_extracted.ml && \
         ocamlc -o certified_extracted_driver certified_core_extracted.cmo \

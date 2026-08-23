@@ -238,6 +238,11 @@ compiles both the generated interface and implementation with OCaml.
 stage-indexed residualizer. `certified_staged_driver.ml` executes the
 extracted residualizer with a dynamic input and checks its result.
 
+`CertifiedResource.v` proves that residualization has an exact structural
+size bound for this core language: the generated code contains exactly as
+many nodes as the source AST, and therefore cannot grow exponentially in this
+pass.
+
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
 boundary explicit through a represented compiler-generator rather than
