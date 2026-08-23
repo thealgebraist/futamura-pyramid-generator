@@ -213,6 +213,9 @@ echo "[10-extra-intrinsic] Coq intrinsically typed stage-4 syntax"
 echo "[10-extra-kernel] Coq kernel checks quoted and intrinsic stage 4"
 (cd "$root" && coqchk -silent TypedQuotedFutamura IntrinsicStage4)
 
+echo "[10-extra-calculus] Coq specialization/differentiation/accumulation laws"
+(cd "$root" && coqc -q DifferentialStaged.v && coqchk -silent DifferentialStaged)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 
