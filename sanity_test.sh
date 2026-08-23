@@ -51,6 +51,23 @@ fi
   "$root/typed_core.ml" "$root/independent_compare.ml"
 "$tmp/independent_compare" | grep -q 'PASS independent Coq/OCaml result: 24'
 
+echo "[3e/14] independent Coq/OCaml stage recurrence"
+if command -v coqc >/dev/null 2>&1; then
+    (cd "$root" && coqc -q IndependentStageN.v)
+else
+    echo "coqc not found" >&2
+    exit 1
+fi
+sed 's/core_futamura_n/stage_n/g' "$root/core_futamura_n.mli" > "$tmp/stage_n.mli"
+sed 's/core_futamura_n/stage_n/g' "$root/core_futamura_n.ml" > "$tmp/stage_n.ml"
+"$ocamlc" -c "$tmp/stage_n.mli"
+"$ocamlc" -I "$tmp" -c "$tmp/stage_n.ml"
+sed 's/Core_futamura_n/Stage_n/g' "$root/independent_stage_compare.ml" > "$tmp/independent_stage_compare.ml"
+"$ocamlc" -I "$tmp" -o "$tmp/independent_stage_compare" \
+  "$root/core_specializer.ml" "$tmp/stage_n.cmo" \
+  "$tmp/independent_stage_compare.ml"
+"$tmp/independent_stage_compare" | grep -q 'PASS independent Coq/OCaml stage results: 10,7'
+
 echo "[4/9] non-executing resource analysis"
 "$ocamlc" -o "$tmp/resources" \
   "$root/core_specializer.ml" "$root/resource_sanity.ml" \

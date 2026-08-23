@@ -190,6 +190,11 @@ It proves a nontrivial nested conditional/addition expression evaluates to
 `24`; `independent_compare.ml` evaluates the corresponding OCaml term and
 checks the same result. The sanity suite runs both sides independently.
 
+`IndependentStageN.v` performs the same independent derivation for the
+general stage recurrence: Coq computes `iterate 10 0 = 10` and `iterate 3 4 =
+7`, while `independent_stage_compare.ml` obtains `10` and `7` from the OCaml
+`stage_n_checked` implementation.
+
 ## Non-executing resource sanity pass
 
 `resource_sanity.ml` performs a separate structural pass over an expression.
