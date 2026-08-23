@@ -131,6 +131,10 @@ Lemma run_tokens_rejects_empty : forall rows,
   run_tokens [] rows = None.
 Proof. reflexivity. Qed.
 
+Lemma run_tokens_rejects_duplicate_year : forall n y1 y2 rows,
+  run_tokens [TokTop n; TokYear y1; TokYear y2] rows = None.
+Proof. reflexivity. Qed.
+
 Theorem parse_and_compile_correct : forall tokens q rows,
   parse tokens = Some q ->
   run_compiled (match parse_and_compile tokens with
