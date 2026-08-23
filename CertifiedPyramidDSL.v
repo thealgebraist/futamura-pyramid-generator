@@ -1,0 +1,68 @@
+(** A small formally specified fragment of the pyramid query DSL. *)
+
+From Stdlib Require Import List.
+Import ListNotations.
+
+Record pyramid : Type := {
+  pyramid_id : nat;
+  built_year : nat;
+  height_cm : nat
+}.
+
+Record query : Type := {
+  limit : nat;
+  required_year : option nat
+}.
+
+Definition matches (q : query) (p : pyramid) : bool :=
+  match required_year q with
+  | None => true
+  | Some year => Nat.eqb year (built_year p)
+  end.
+
+Fixpoint take (n : nat) (xs : list pyramid) : list pyramid :=
+  match n, xs with
+  | O, _ => []
+  | S n', [] => []
+  | S n', x :: xs' => x :: take n' xs'
+  end.
+
+Fixpoint select (q : query) (xs : list pyramid) : list pyramid :=
+  match xs with
+  | [] => []
+  | x :: xs' =>
+      if matches q x
+      then match limit q with
+           | O => []
+           | S n => x :: select
+                         {| limit := n; required_year := required_year q |}
+                         xs'
+           end
+      else select q xs'
+  end.
+
+(** The compiler residualizes a fixed year predicate, leaving only records
+    and the bounded traversal dynamic. *)
+Definition residual_query (year : nat) (n : nat) : query :=
+  {| limit := n; required_year := Some year |}.
+
+Theorem fixed_year_query_correct : forall year n rows,
+  select (residual_query year n) rows =
+  select {| limit := n; required_year := Some year |} rows.
+Proof.
+  reflexivity.
+Qed.
+
+Theorem select_respects_limit : forall q rows,
+  length (select q rows) <= limit q.
+Proof.
+  intros q rows; revert q.
+  induction rows as [|p rows IH]; intros q; simpl.
+  - apply le_0_n.
+  - destruct (matches q p) eqn:hm.
+    + destruct (limit q) as [|n] eqn:hl; simpl.
+      * apply le_n.
+      * simpl. apply le_n_S. apply IH.
+    + apply IH.
+Qed.
+

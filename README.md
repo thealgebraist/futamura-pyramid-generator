@@ -243,6 +243,11 @@ size bound for this core language: the generated code contains exactly as
 many nodes as the source AST, and therefore cannot grow exponentially in this
 pass.
 
+`CertifiedPyramidDSL.v` formalizes the first domain fragment: pyramid records,
+fixed-year predicates, bounded top selection, and the theorem
+`select_respects_limit`, which proves that a query cannot emit more rows than
+its declared limit.
+
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
 boundary explicit through a represented compiler-generator rather than
