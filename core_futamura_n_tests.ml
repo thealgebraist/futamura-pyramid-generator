@@ -37,6 +37,17 @@ let () =
   | Ok (VInt 5) -> ()
   | _ -> failwith "typed stage 3 produced the wrong value"
   end;
+  let identity_transformer generator = generator in
+  let stage4 = projection4 identity_transformer in
+  begin match stage4.artifact core_generator core_interpreter program [] with
+  | Ok (VInt 5) -> ()
+  | _ -> failwith "stage 4 identity transformer produced the wrong value"
+  end;
+  let typed4 = projection4_typed identity_transformer in
+  begin match typed4.typed_artifact core_generator core_interpreter program [] with
+  | Ok (VInt 5) -> ()
+  | _ -> failwith "typed stage 4 produced the wrong value"
+  end;
   let stage2 = core_stage2.artifact program [] |> require_ok "stage 2" in
   begin match stage2 with
   | VInt 5 -> ()
@@ -97,8 +108,8 @@ let () =
   | Ok (VInt 1) -> ()
   | _ -> failwith "stage 3 ignored its interpreter argument"
   end;
-  begin match contract Stage3 Stage3 Stage3 with
-  | Ok Stage3 -> ()
+  begin match contract Stage4 Stage4 Stage4 with
+  | Ok Stage4 -> ()
   | _ -> failwith "valid stage contract rejected"
   end;
   begin match contract Stage3 Stage2 Stage1 with

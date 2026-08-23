@@ -28,11 +28,15 @@ test "$("$tmp/second" | grep -c '^PASS ')" -eq 4
 echo "[3b/11] total Futamura stages 1-3"
 cp "$root/core_futamura_n.mli" "$tmp/core_futamura_n.mli"
 cp "$root/core_futamura_n.ml" "$tmp/core_futamura_n.ml"
-"$ocamlc" -c "$tmp/core_futamura_n.mli"
-"$ocamlc" -I "$tmp" -c "$tmp/core_futamura_n.ml"
-"$ocamlc" -I "$tmp" -o "$tmp/core_futamura_n" \
-  "$root/core_specializer.ml" "$tmp/core_futamura_n.ml" \
-  "$root/core_futamura_n_tests.ml"
+cp "$root/core_specializer.ml" "$tmp/core_specializer.ml"
+(
+  cd "$tmp"
+  "$ocamlc" -c core_specializer.ml
+  "$ocamlc" -c core_futamura_n.mli
+  "$ocamlc" -I . -c core_futamura_n.ml
+  "$ocamlc" -I . -o core_futamura_n \
+    core_specializer.ml core_futamura_n.ml "$root/core_futamura_n_tests.ml"
+)
 "$tmp/core_futamura_n" | grep -q 'PASS total Futamura stages 1-3'
 
 echo "[3b-extra] typed OpenGL-shaped DSL and AArch64 stage 3 artifact"

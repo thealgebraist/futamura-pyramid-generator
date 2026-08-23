@@ -20,15 +20,20 @@ type ('program, 'data, 'result) compiler =
 type ('program, 'data, 'result) generator =
   ('program, 'data, 'result) interpreter ->
   ('program, 'data, 'result) compiler
+type ('program, 'data, 'result) compiler_generator_transformer =
+  ('program, 'data, 'result) generator ->
+  ('program, 'data, 'result) generator
 
 type stage =
   | Stage1
   | Stage2
   | Stage3
+  | Stage4
 
 type stage_1
 type stage_2
 type stage_3
+type stage_4
 
 type zero
 type 'n successor = Successor_marker of 'n
@@ -90,6 +95,10 @@ let projection3_typed generator :
     (stage_3, ('program, 'data, 'result) generator) typed_staged =
   { typed_stage = Stage3; typed_artifact = generator }
 
+let projection4_typed transformer :
+    (stage_4, ('program, 'data, 'result) compiler_generator_transformer) typed_staged =
+  { typed_stage = Stage4; typed_artifact = transformer }
+
 (* Stage 1: interpreter + fixed program -> residual program. *)
 let projection1 interpreter program =
   { stage = Stage1; artifact = mix interpreter program }
@@ -104,9 +113,15 @@ let projection3 (generator : ('program, 'data, 'result) generator) :
     ('program, 'data, 'result) generator staged =
   { stage = Stage3; artifact = generator }
 
+(* Stage 4: a transformer over the represented stage-3 generator. *)
+let projection4
+    (transformer : ('program, 'data, 'result) compiler_generator_transformer) :
+    ('program, 'data, 'result) compiler_generator_transformer staged =
+  { stage = Stage4; artifact = transformer }
+
 let check_stage expected actual =
   match expected, actual with
-  | Stage1, Stage1 | Stage2, Stage2 | Stage3, Stage3 -> Ok ()
+  | Stage1, Stage1 | Stage2, Stage2 | Stage3, Stage3 | Stage4, Stage4 -> Ok ()
   | _ -> Error "stage-order mismatch"
 
 (* A total generic stage contract.  Higher stages can be added by extending
