@@ -216,6 +216,9 @@ echo "[10-extra-kernel] Coq kernel checks quoted and intrinsic stage 4"
 echo "[10-extra-calculus] Coq specialization/differentiation/accumulation laws"
 (cd "$root" && coqc -q DifferentialStaged.v && coqchk -silent DifferentialStaged)
 
+echo "[10-extra-staged-calculus] Coq quoted calculus pass"
+(cd "$root" && coqc -q DifferentialQuoted.v && coqchk -silent DifferentialQuoted)
+
 echo "[11/11] extracted certified pass is compilable"
 test -f "$root/certified_core_extracted.cmo"
 

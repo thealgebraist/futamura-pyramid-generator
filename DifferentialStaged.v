@@ -1,5 +1,7 @@
 (** Specialization, differentiation, and finite accumulation for a total DSL. *)
 
+Module DifferentialDSL.
+
 Inductive Expr : Type :=
 | Const : nat -> Expr
 | Static : Expr
@@ -94,3 +96,5 @@ Proof. vm_compute. reflexivity. Qed.
 Example integrated_example :
   integrate (specialize 5 example) 0 3 = integrate example 5 3.
 Proof. apply integrate_specialize_commutes. Qed.
+
+End DifferentialDSL.
