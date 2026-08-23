@@ -11,14 +11,22 @@ Record pyramid : Type := {
 
 Record query : Type := {
   limit : nat;
-  required_year : option nat
+  required_year : option nat;
+  minimum_height_cm : option nat
 }.
 
 Definition matches (q : query) (p : pyramid) : bool :=
-  match required_year q with
-  | None => true
-  | Some year => Nat.eqb year (built_year p)
-  end.
+  let year_ok :=
+    match required_year q with
+    | None => true
+    | Some year => Nat.eqb year (built_year p)
+    end in
+  let height_ok :=
+    match minimum_height_cm q with
+    | None => true
+    | Some minimum => Nat.leb minimum (height_cm p)
+    end in
+  andb year_ok height_ok.
 
 Fixpoint take (n : nat) (xs : list pyramid) : list pyramid :=
   match n, xs with
@@ -35,7 +43,8 @@ Fixpoint select (q : query) (xs : list pyramid) : list pyramid :=
       then match limit q with
            | O => []
            | S n => x :: select
-                         {| limit := n; required_year := required_year q |}
+                         {| limit := n; required_year := required_year q;
+                            minimum_height_cm := minimum_height_cm q |}
                          xs'
            end
       else select q xs'
@@ -44,11 +53,12 @@ Fixpoint select (q : query) (xs : list pyramid) : list pyramid :=
 (** The compiler residualizes a fixed year predicate, leaving only records
     and the bounded traversal dynamic. *)
 Definition residual_query (year : nat) (n : nat) : query :=
-  {| limit := n; required_year := Some year |}.
+  {| limit := n; required_year := Some year; minimum_height_cm := None |}.
 
 Theorem fixed_year_query_correct : forall year n rows,
   select (residual_query year n) rows =
-  select {| limit := n; required_year := Some year |} rows.
+  select {| limit := n; required_year := Some year;
+            minimum_height_cm := None |} rows.
 Proof.
   reflexivity.
 Qed.
@@ -78,8 +88,10 @@ Proof.
       * constructor; [exact hm|].
         change (Forall
           (fun p => matches
-             {| limit := n; required_year := required_year q |} p = true)
-          (select {| limit := n; required_year := required_year q |} rows)).
+             {| limit := n; required_year := required_year q;
+                minimum_height_cm := minimum_height_cm q |} p = true)
+          (select {| limit := n; required_year := required_year q;
+                    minimum_height_cm := minimum_height_cm q |} rows)).
         apply IH.
     + apply IH.
 Qed.

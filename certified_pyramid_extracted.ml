@@ -26,16 +26,36 @@ let rec eqb n m =
              | O -> False
              | S m' -> eqb n' m')
 
+(** val leb : nat -> nat -> bool **)
+
+let rec leb n m =
+  match n with
+  | O -> True
+  | S n' -> (match m with
+             | O -> False
+             | S m' -> leb n' m')
+
 type pyramid = { pyramid_id : nat; built_year : nat; height_cm : nat }
 
-type query = { limit : nat; required_year : nat option }
+type query = { limit : nat; required_year : nat option;
+               minimum_height_cm : nat option }
 
 (** val matches : query -> pyramid -> bool **)
 
 let matches q p =
-  match q.required_year with
-  | Some year -> eqb year p.built_year
-  | None -> True
+  let year_ok =
+    match q.required_year with
+    | Some year -> eqb year p.built_year
+    | None -> True
+  in
+  let height_ok =
+    match q.minimum_height_cm with
+    | Some minimum -> leb minimum p.height_cm
+    | None -> True
+  in
+  (match year_ok with
+   | True -> height_ok
+   | False -> False)
 
 (** val select : query -> pyramid list -> pyramid list **)
 
@@ -47,5 +67,7 @@ let rec select q = function
      (match q.limit with
       | O -> Nil
       | S n ->
-        Cons (x, (select { limit = n; required_year = q.required_year } xs')))
+        Cons (x,
+          (select { limit = n; required_year = q.required_year;
+            minimum_height_cm = q.minimum_height_cm } xs')))
    | False -> select q xs')
