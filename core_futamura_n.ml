@@ -97,7 +97,7 @@ let core_compiler : (expr, (string * value) list, value) compiler =
     | Dynamic _ -> eval environment program
 
 let core_generator : (expr, (string * value) list, value) generator =
-  fun _interpreter -> core_compiler
+  fun interpreter -> fun program -> mix interpreter program
 
 let core_stage2 = projection2 core_interpreter
 let core_stage3 = projection3 core_generator
