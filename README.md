@@ -234,6 +234,10 @@ structure is residualized while the input remains dynamic.
 verified `compile` function to `certified_core_extracted.ml`; the sanity suite
 compiles both the generated interface and implementation with OCaml.
 
+`CertifiedStagedExtraction.v` performs the same extraction for the
+stage-indexed residualizer. `certified_staged_driver.ml` executes the
+extracted residualizer with a dynamic input and checks its result.
+
 `CertifiedProjection.v` gives executable Coq definitions for the first,
 second, and third projection contracts.  It also makes the self-application
 boundary explicit through a represented compiler-generator rather than
