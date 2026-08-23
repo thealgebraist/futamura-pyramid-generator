@@ -233,3 +233,8 @@ structure is residualized while the input remains dynamic.
 `CertifiedExtraction.v` is the executable boundary.  It extracts the
 verified `compile` function to `certified_core_extracted.ml`; the sanity suite
 compiles both the generated interface and implementation with OCaml.
+
+`CertifiedProjection.v` gives executable Coq definitions for the first,
+second, and third projection contracts.  It also makes the self-application
+boundary explicit through a represented compiler-generator rather than
+pretending that an untyped function can safely apply itself.
